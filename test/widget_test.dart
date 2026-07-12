@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:demo_app/main.dart';
+import 'package:Riderr_app/main.dart';
 
 void main() {
   testWidgets('App builds smoke test', (WidgetTester tester) async {
@@ -15,6 +15,7 @@ void main() {
     await tester.pumpWidget(const RideApp());
 
     // Verify that the role selection screen appears.
-    expect(find.text('Welcome to RideWalaa'), findsOneWidget);
+    expect(find.text('RideWalaa'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
   });
 }
