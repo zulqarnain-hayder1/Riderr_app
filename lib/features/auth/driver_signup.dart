@@ -285,7 +285,7 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
                     borderSide: const BorderSide(color: kGreenDark, width: 2),
                   ),
                 ),
-                items: ['Bike', 'Economy', 'Premium AC']
+                items: ['Bike', 'Rickshaw', 'Economy', 'Premium AC']
                     .map((t) => DropdownMenuItem(value: t, child: Text(t)))
                     .toList(),
                 onChanged: (v) => setState(() => _vehicleType = v!),

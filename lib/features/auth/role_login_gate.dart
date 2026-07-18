@@ -32,29 +32,34 @@ class RoleLoginGate extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 40),
-                  // App logo — icon only, clean
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF00C853), Color(0xFF00952E)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: kGreen.withAlpha(100),
-                          blurRadius: 24,
-                          spreadRadius: 4,
+                  // App logo — icon only, clean (Long press triggers secret Admin gate)
+                  GestureDetector(
+                    onLongPress: () {
+                      Navigator.pushNamed(context, '/admin-login');
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF00C853), Color(0xFF00952E)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.directions_car_rounded,
-                      size: 44,
-                      color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: kGreen.withAlpha(100),
+                            blurRadius: 24,
+                            spreadRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.directions_car_rounded,
+                        size: 44,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
