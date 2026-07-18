@@ -52,6 +52,10 @@ class PendingRide {
   final int fare;
   final String vehicleType;
   final double distance;
+  final double? pickupLat;
+  final double? pickupLng;
+  final double? dropoffLat;
+  final double? dropoffLng;
 
   PendingRide({
     required this.passengerName,
@@ -60,6 +64,10 @@ class PendingRide {
     required this.fare,
     required this.vehicleType,
     required this.distance,
+    this.pickupLat,
+    this.pickupLng,
+    this.dropoffLat,
+    this.dropoffLng,
   });
 }
 
@@ -99,6 +107,17 @@ const List<RideType> rideTypes = [
     perKmFare: 15,
     color: Color(0xFFFF6F00),
     features: ['1 Passenger', 'Right Fare', 'Cheap', 'Helmet Provided'],
+  ),
+  RideType(
+    name: 'Rickshaw',
+    desc: 'Auto rickshaw ride',
+    detailDesc: 'Affordable auto rickshaw rides for quick local transport.',
+    icon: Icons.electric_rickshaw_rounded,
+    heroImageUrl: 'https://images.unsplash.com/photo-1566908829550-e6551b00979b?w=400&q=80',
+    baseFare: 120,
+    perKmFare: 22,
+    color: Color(0xFF4CAF50),
+    features: ['3 Passengers', 'Open Air', 'Cheap', 'Local Transport'],
   ),
   RideType(
     name: 'Economy',

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'features/splash/splash_screen.dart';
+import 'features/admin/admin_login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const RideApp());
 }
 
@@ -28,7 +27,11 @@ class RideApp extends StatelessWidget {
           primary: const Color(0xFF00C853),
         ),
       ),
-      home: const SplashScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/admin-login': (context) => const AdminLoginPage(),
+      },
     );
   }
 }
