@@ -58,6 +58,8 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
           'createdAt': FieldValue.serverTimestamp(),
         }).timeout(const Duration(seconds: 10));
 
+        await _sendWelcomeEmail(email, name, 'driver');
+
         if (mounted) {
           Navigator.pushReplacement(
             context,
@@ -88,6 +90,8 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
               'createdAt': FieldValue.serverTimestamp(),
             }).timeout(const Duration(seconds: 10));
 
+            await _sendWelcomeEmail(email, name, 'driver');
+
             if (mounted) {
               Navigator.pushReplacement(
                 context,
@@ -112,6 +116,34 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
         }
       }
     }
+  }
+
+  Future<void> _sendWelcomeEmail(String recipientEmail, String recipientName, String role) async {
+    try {
+      final String subject = 'Welcome to Riderr! 🚗';
+      final String textBody = 'Hello $recipientName,\n\nWelcome to Riderr! Your account has been registered successfully as a $role. Enjoy your ride!\n\nBest regards,\nRiderr Team';
+      final String htmlBody = '''
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2 style="color: #1A1A2E;">Welcome to Riderr, $recipientName! 🚗</h2>
+          <p>Your account has been registered successfully as a <strong>$role</strong>.</p>
+          <p>We are excited to have you on board! Explore the app and enjoy a premium, seamless ride experience.</p>
+          <br>
+          <p>Best regards,<br><strong>Riderr Team</strong></p>
+        </div>
+      ''';
+
+      await FirebaseFirestore.instance.collection('mail').add({
+        'to': recipientEmail,
+        'message': {
+          'subject': subject,
+          'text': textBody,
+          'html': htmlBody,
+        },
+        'delivery': {
+          'state': 'PENDING',
+        },
+      });
+    } catch (_) {}
   }
 
   Widget _field(
@@ -314,7 +346,15 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
                     borderSide: const BorderSide(color: kGreenDark, width: 2),
                   ),
                 ),
-                validator: (v) => v!.length < 4 ? 'Too short' : null,
+                 validator: (v) {
+                  if (v == null || v.isEmpty) return 'Enter password';
+                  if (v.length < 8) return 'Password must be at least 8 characters';
+                  if (!RegExp(r'[A-Z]').hasMatch(v)) return 'Must contain an uppercase letter';
+                  if (!RegExp(r'[a-z]').hasMatch(v)) return 'Must contain a lowercase letter';
+                  if (!RegExp(r'[0-9]').hasMatch(v)) return 'Must contain a digit';
+                  if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(v)) return 'Must contain a special character';
+                  return null;
+                },
               ),
               const SizedBox(height: 28),
               SizedBox(

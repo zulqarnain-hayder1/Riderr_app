@@ -42,6 +42,7 @@ dependencies:
   latlong2: ^0.10.1
   http: ^1.6.0
   geolocator: ^14.0.3
+  image_picker: ^1.2.3
 
 dev_dependencies:
   flutter_test:

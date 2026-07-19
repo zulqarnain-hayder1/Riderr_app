@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'dart:convert';
+
 const kGreen = Color(0xFF00C853);
 const kGreenDark = Color(0xFF00952E);
 const kBlue = Color(0xFF1565C0);
@@ -35,6 +37,22 @@ Widget networkImg(
   BoxFit fit = BoxFit.cover,
   Widget? fallback,
 }) {
+  if (url.startsWith('data:image/') || url.contains(';base64,')) {
+    try {
+      final base64Str = url.split(';base64,').last;
+      final bytes = base64Decode(base64Str);
+      return Image.memory(
+        bytes,
+        width: w,
+        height: h,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) =>
+            fallback ?? const Icon(Icons.broken_image, color: Colors.grey),
+      );
+    } catch (e) {
+      // fallback
+    }
+  }
   return Image.network(
     url,
     width: w,
@@ -47,6 +65,7 @@ Widget networkImg(
 
 class PendingRide {
   final String passengerName;
+  final String passengerPhone;
   final String pickup;
   final String dropoff;
   final int fare;
@@ -59,6 +78,7 @@ class PendingRide {
 
   PendingRide({
     required this.passengerName,
+    required this.passengerPhone,
     required this.pickup,
     required this.dropoff,
     required this.fare,

@@ -602,6 +602,40 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (c) => AlertDialog(
+                                backgroundColor: const Color(0xFF16192B),
+                                title: const Text('Delete Ride Request?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                content: const Text('Are you sure you want to permanently delete this ride request record?', style: TextStyle(color: Colors.grey)),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(c, false),
+                                    child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => Navigator.pop(c, true),
+                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                    child: const Text('Delete', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await FirebaseFirestore.instance.collection('rides').doc(rId).delete();
+                            }
+                          },
+                          icon: const Icon(Icons.delete_forever_rounded, size: 16),
+                          label: const Text('Delete Request', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.redAccent,
+                            side: const BorderSide(color: Colors.redAccent),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -828,27 +862,81 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 ),
               ),
               const SizedBox(width: 16),
-              SizedBox(
-                width: 100,
-                height: 38,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final newStatus = isBlocked ? 'active' : 'blocked';
-                    await FirebaseFirestore.instance.collection('users').doc(uId).update({
-                      'status': newStatus,
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isBlocked ? const Color(0xFF00E676) : Colors.redAccent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    padding: EdgeInsets.zero,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 80,
+                    height: 38,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final newStatus = isBlocked ? 'active' : 'blocked';
+                        await FirebaseFirestore.instance.collection('users').doc(uId).update({
+                          'status': newStatus,
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isBlocked ? const Color(0xFF00E676) : Colors.amber.shade800,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: Text(
+                        isBlocked ? 'UNBLOCK' : 'BLOCK',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 0.5),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    isBlocked ? 'UNBLOCK' : 'BLOCK',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 75,
+                    height: 38,
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (c) => AlertDialog(
+                            backgroundColor: const Color(0xFF16192B),
+                            title: const Text('Delete User?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            content: Text('Are you sure you want to permanently delete user "$name"?', style: const TextStyle(color: Colors.grey)),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(c, false),
+                                  child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () => Navigator.pop(c, true),
+                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                  child: const Text('Delete', style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirm == true) {
+                          await FirebaseFirestore.instance.collection('users').doc(uId).delete();
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('User "$name" has been permanently deleted.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.redAccent,
+                        side: const BorderSide(color: Colors.redAccent, width: 1.5),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: const Text(
+                        'DELETE',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 0.5),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
